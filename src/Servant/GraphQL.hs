@@ -118,7 +118,7 @@ instance (KnownSymbol path, HasGraphQL api) => HasGraphQL (path :> api) where
          prefixPath (FieldDefinition p as t) = FieldDefinition (pathPiece <> "/" <> p) as t
 
 
-instance ( ReflectMethod method, KnownNat status, GraphQLValue a
+instance forall k1 (ctypes :: [*]) (a :: *) (method :: k) (status :: Nat). ( ReflectMethod method, KnownNat status, GraphQLValue a
          ) => HasGraphQL (Verb method status ctypes a) where
 
   type GraphQLT (Verb method status ctypes a) m = m a
