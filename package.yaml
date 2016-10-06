@@ -20,6 +20,9 @@ dependencies:
   - servant-server
   - containers
   - aeson
+  - graphql
+  - string-conversions
+  - http-types
 
 default-extensions:
   - AutoDeriveTypeable
@@ -38,6 +41,7 @@ default-extensions:
   - MultiParamTypeClasses
   - OverloadedStrings
   - RankNTypes
+  - RecordWildCards
   - ScopedTypeVariables
   - TypeFamilies
   - TypeOperators
@@ -45,6 +49,15 @@ default-extensions:
 library:
   source-dirs:      src
   other-modules:    []
+
+executables:
+  greet:
+    main:           greet.hs
+    source-dirs:    example
+    dependencies:
+      - wai
+      - warp
+      - servant-graphql
 
 tests:
   spec:
