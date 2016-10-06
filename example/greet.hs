@@ -33,7 +33,7 @@ type TestApi =
 
        -- POST /greet with a Greet as JSON in the request body,
        --             returns a Greet as JSON
-  :<|> "greet" :> ReqBody '[JSON] Greet :> Post '[JSON] Greet
+--  :<|> "greet" :> ReqBody '[JSON] Greet :> Post '[JSON] Greet
 
   :<|> "greet" :> Capture "greetid" Text :> Delete '[JSON] Text
 

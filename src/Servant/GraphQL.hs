@@ -94,11 +94,23 @@ instance (HasGraphQL a, HasGraphQL b) => HasGraphQL (a :<|> b) where
 -- > server = getBook
 -- >   where getBook :: Text -> Handler Book
 -- >         getBook isbn = ...
-instance (KnownSymbol capture, FromJSON a, HasGraphQL api)
+instance (KnownSymbol capture, FromJSON a, HasGraphQL api, GraphQLValue a)
   => HasGraphQL (Capture capture a :> api) where
 
   type GraphQLT (Capture capture a :> api) m =
       a -> GraphQLT api m
+
+  schema Proxy =
+      case schema (Proxy :: Proxy api) of
+        RequestSchema {..} -> RequestSchema
+            { schemaQueries = map addArgument schemaQueries
+            , schemaMutations = map addArgument schemaMutations
+            , ..
+            }
+
+   where argName = cs $ symbolVal (Proxy :: Proxy capture)
+         addArgument (FieldDefinition p as t) = FieldDefinition p (a':as) t
+         a' = InputValueDefinition argName (responseType (Proxy :: Proxy a)) Nothing
 
 -- | Make sure the incoming request starts with @"/path"@, strip it and
 -- pass the rest of the request path to @api@.
