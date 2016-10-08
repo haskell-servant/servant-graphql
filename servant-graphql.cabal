@@ -1,4 +1,4 @@
--- This file has been generated from package.yaml by hpack version 0.9.0.
+-- This file has been generated from package.yaml by hpack version 0.14.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -81,6 +81,7 @@ test-suite doctest
     , Glob >= 0.7 && < 0.8
     , yaml == 0.8.*
   other-modules:
+      Servant.GraphQLSpec
       Spec
   default-language: Haskell2010
 
@@ -106,4 +107,5 @@ test-suite spec
     , QuickCheck >= 2.8 && < 2.9
   other-modules:
       Doctest
+      Servant.GraphQLSpec
   default-language: Haskell2010

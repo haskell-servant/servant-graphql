@@ -52,6 +52,10 @@ instance GraphQLValue T.Text where
     responseType _ = TypeNamed $ NamedType "String"
     typeDefinition _ = []
 
+instance GraphQLValue String where
+    responseType _ = TypeNamed $ NamedType "String"
+    typeDefinition _ = []
+
 instance GraphQLValue Bool where
     responseType _ = TypeNamed $ NamedType "Boolean"
     typeDefinition _ = []
