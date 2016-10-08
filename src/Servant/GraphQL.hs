@@ -2,6 +2,7 @@
 
 module Servant.GraphQL where
 
+import Control.Applicative
 import qualified Data.Map as Map
 import Data.Aeson
 import qualified Data.Text as T
@@ -44,6 +45,11 @@ class HasGraphQL api where
 
     schema :: Proxy api -> RequestSchema
 
+    handleOperation :: proxy api
+                    -> OperationDefinition
+                    -> GraphQLT api Handler
+                    -> Maybe (Handler Data.Aeson.Value)
+
 class GraphQLValue a where
     responseType :: Proxy a -> Type
     typeDefinition :: Proxy a -> [TypeDefinition]
@@ -81,6 +87,14 @@ instance (HasGraphQL a, HasGraphQL b) => HasGraphQL (a :<|> b) where
       where pa = Proxy :: Proxy a
             pb = Proxy :: Proxy b
 
+  handleOperation _ op (a :<|> b) = handleOperation pa op a
+                                <|> handleOperation pb op b
+    where
+      pa :: Proxy a
+      pa = Proxy
+      pb :: Proxy b
+      pb = Proxy
+
 -- | If you use 'Capture' in one of the endpoints for your API,
 -- this automatically requires your server-side handler to be a function
 -- that takes an argument of the type specified by the 'Capture'.
@@ -115,6 +129,8 @@ instance (KnownSymbol capture, FromJSON a, HasGraphQL api, GraphQLValue a)
    where argName = cs $ symbolVal (Proxy :: Proxy capture)
          addArgument (FieldDefinition p as t) = FieldDefinition p (a':as) t
          a' = InputValueDefinition argName (responseType (Proxy :: Proxy a)) Nothing
+
+  handleOperation _ op fn =
 
 -- | Make sure the incoming request starts with @"/path"@, strip it and
 -- pass the rest of the request path to @api@.

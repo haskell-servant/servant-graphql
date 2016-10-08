@@ -23,6 +23,7 @@ dependencies:
   - graphql
   - string-conversions
   - http-types
+  - mtl
 
 default-extensions:
   - AutoDeriveTypeable
